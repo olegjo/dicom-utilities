@@ -1,4 +1,4 @@
-import glob, sys, pydicom, os, glob
+import glob, sys, pydicom, os, glob, fnmatch
 import progressbar, argparse
 
 import pydicom.errors
@@ -23,9 +23,7 @@ class MatchedSeries:
         except(KeyError):
             series_description = "UNKNOWN SERIES DESCRIPTION"
 
-        return f"d{patient_name} -- {series_description} -- {self.dicom_file}"
-
-
+        return f"{patient_name} -- {series_description} -- {self.dicom_file}"
 
 def check_match(matches, check):
     for m in matches:
@@ -33,12 +31,14 @@ def check_match(matches, check):
             return True
     return False
 
-
-def dcmfindseries(input_dir, search_tag, search_value, verbose=False, show_progress_bar=True):
+def dcmfindseries(input_dir, search_tag, search_value, case_insensitive, verbose=False, show_progress_bar=True):
     matches: list[MatchedSeries] = []
 
-    # All files and directories ending with .txt and that don't begin with a dot:
-    all_files = glob.glob(f"{input_dir}/**/*.dcm", recursive=True)
+    # All files and directories in the given directory
+    all_files = glob.glob(f"{input_dir}/**/*", recursive=True)
+
+    # Filter out directories and keep only files. Can be any file type at this point. We'll filter on DICOM later.
+    all_files = list(filter(lambda fname : os.path.isfile(fname), all_files))
 
     if show_progress_bar:
         # Setup progressbar
@@ -60,28 +60,41 @@ def dcmfindseries(input_dir, search_tag, search_value, verbose=False, show_progr
         except(KeyError):
             continue
 
-        if search_value in looked_up_value:
+        if case_insensitive:
+            looked_up_value = str(looked_up_value).lower()
+            search_tag = str(search_value).lower()
+
+        # Look for the search value in the looked up value. Can have wildcards.
+        if fnmatch.fnmatch(looked_up_value, search_value):
             ## Check if this series is already found
             already_found = check_match(matches, ds)
 
             if not already_found:
                 matches.append(MatchedSeries(ds, dicom_file))
                 if verbose:
-                    print(f"FOUND: {dicom_file}")
+                    print(f"\n\nFOUND: {dicom_file}\n\n")
 
     return matches
+
+"""
+Signatures
+dcmfind -q "SeriesDescription==ABC" directory
+dcmfind -q "SeriesDescription==*ABC*" directory
+"""
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("directory")
-    parser.add_argument("-m", "--match")
-    parser.add_argument("-v", "--verbose", default=False)
+    parser.add_argument("-q", "--query")
+    parser.add_argument("--case-insensitive", default=False, action='store_true')
+    parser.add_argument("-v", "--verbose", default=False, action='store_true')
     args = parser.parse_args()
 
-    [query, value] = args.match.split("=")
+    [search_term, search_value] = args.query.split("==")
     verbose = args.verbose
+    case_insensitive = args.case_insensitive
 
-    matches = dcmfindseries(args.directory, query, value, verbose, True)
+    matches = dcmfindseries(args.directory, search_term, search_value, case_insensitive, verbose, True)
 
     print()
     print()
