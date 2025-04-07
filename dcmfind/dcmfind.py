@@ -8,30 +8,26 @@ class MatchedSeries:
     def __init__(self, ds: pydicom.Dataset):
         self.ds = ds
         self.series_instance_uid = ds["SeriesInstanceUID"]
-        try:
-            self.patient_name = ds["PatientName"].value
-        except(KeyError):
-            self.patient_name = "UNKNOWN"
+        self.patient_name = MatchedSeries.__get_tag_value(ds, "PatientName", "UNKNOWN")
 
         self.file_paths = []
     
     def __eq__(self, other: pydicom.Dataset):
-        try:
-            patient_name = other["PatientName"].value
-        except(KeyError):
-            patient_name = "UNKNOWN"
-
-        return other["SeriesInstanceUID"] == self.series_instance_uid and patient_name == self.patient_name
+        other_patient_name = MatchedSeries.__get_tag_value(other, "PatientName", "UNKNOWN")
+        return other["SeriesInstanceUID"] == self.series_instance_uid and other_patient_name == self.patient_name
     
-    def __repr__(self):        
-        try:
-            series_description = self.ds['SeriesDescription'].value
-        except(KeyError):
-            series_description = "UNKNOWN SERIES DESCRIPTION"
+    def __repr__(self):
+        series_description = MatchedSeries.__get_tag_value(self.ds, "SeriesDescription", "UNKNOWN SERIES DESCRIPTION")
 
         ret = "="*100
-        ret += f"\nPatientName         {self.patient_name}"
-        ret += f"\nSeriesDescription   {series_description}"
+        #ret += f"\nPatientName             {self.patient_name}"
+        ret += f"\nSeriesDescription       {series_description}"
+        ret += f"\nManufacturer            {MatchedSeries.__get_tag_value(self.ds, 'Manufacturer', 'UNKNOWN Manufacturer')}"
+        ret += f"\nManufacturerModelName   {MatchedSeries.__get_tag_value(self.ds, 'ManufacturerModelName', 'UNKNOWN ManufacturerModelName')}"
+        ret += f"\nSoftwareVersions        {MatchedSeries.__get_tag_value(self.ds, 'SoftwareVersions', 'UNKNOWN SoftwareVersions')}"
+        ret += f"\nDeviceSerialNumber      {MatchedSeries.__get_tag_value(self.ds, 'DeviceSerialNumber', 'UNKNOWN DeviceSerialNumber')}"
+        ret += f"\nRepetitionTime          {MatchedSeries.__get_tag_value(self.ds, 'RepetitionTime', 'UNKNOWN RepetitionTime')}"
+        ret += f"\nEchoTime                {MatchedSeries.__get_tag_value(self.ds, 'EchoTime', 'UNKNOWN EchoTime')}"
         ret += f"\nFound in the following locations:"
 
         unique_dirnames = []
@@ -46,6 +42,14 @@ class MatchedSeries:
     
     def add_file(self, path):
         self.file_paths.append(path)
+    
+    @staticmethod
+    def __get_tag_value(ds: pydicom.Dataset, tag: str, default: str):
+        try:
+            ret = ds[tag].value
+        except(KeyError):
+            ret = default
+        return ret
 
 def check_match(matches, check) -> Optional[MatchedSeries]:
     for m in matches:
