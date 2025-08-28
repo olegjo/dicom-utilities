@@ -22,6 +22,8 @@ def modify_to_new_patient(input_dir, dry_run):
     series_instance_uid_map = {}
     study_instance_uid_map = {}
 
+    print(f"{len(all_files)} DICOM files detected")
+
     for dicom_file in all_files:
         ds = pydicom.dcmread(dicom_file)
 
@@ -67,7 +69,7 @@ def modify_to_new_patient(input_dir, dry_run):
         if dry_run:
             print(f"DRY RUN (not executed): {command}")
         else:
-            os.system()
+            os.system(command)
         
 
 if __name__ == "__main__":
