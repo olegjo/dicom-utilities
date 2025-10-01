@@ -48,7 +48,15 @@ def print_dicom_meta_in_dir(input_dir, output_format):
         for tag in dicom_tags_to_get:
             if tag in ["NUMBER_OF_FILES", "FILE_PATH"]:
                 continue
-            series_instance_uid_map[series_instance_uid][tag] = get_tag_value(ds, tag)
+            
+            value = get_tag_value(ds, tag)
+            if tag == "SOPClassUID":
+                if value == "1.2.840.10008.5.1.4.1.1.4":
+                    value = f"{value} (MR Image Storage)"
+                elif value == "1.2.840.10008.5.1.4.1.1.4.1":
+                    value = f"{value} (Enhanced MR Image Storage)"
+            
+            series_instance_uid_map[series_instance_uid][tag] = value
         
         series_instance_uid_map[series_instance_uid]["NUMBER_OF_FILES"] += 1
     
