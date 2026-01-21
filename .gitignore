@@ -2,5 +2,3 @@
 gitignore*
 *.DS_Store
 credentials.txt
-.dcm
-dicom
