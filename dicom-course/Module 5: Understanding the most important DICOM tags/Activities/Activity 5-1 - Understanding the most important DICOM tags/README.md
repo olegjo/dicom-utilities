@@ -10,7 +10,7 @@
 
 On your local machine:
 1. Open a terminal and cd into the folder you created above
-2. Change the SeriesInstanceUID of the DICOM file using the dcmodify tool.
+2. Change the SeriesInstanceUID of the DICOM file using the `dcmodify` tool.
    1. Food for thought: How can you define a new value for the UID?
 3. Send the DICOM file, with updated SeriesInstanceUID to nordicMEDiVA.
 4. What happened? Can you explain?
