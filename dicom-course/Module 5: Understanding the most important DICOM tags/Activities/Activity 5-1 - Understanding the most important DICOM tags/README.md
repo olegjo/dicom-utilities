@@ -1,12 +1,10 @@
 # Activities - Understanding the most important DICOM tags
 
 ## Exercise 1 - SeriesInstanceUID
-1. For this exercise, you need an instance of nordicMEDiVA available to you, and you need to be able to send DICOM data to it. To make things easier, delete all data that's in the nordicMEDiVA instance before we start.
-2. Create a new folder on your computer (desktop is fine)
-3. Put a single DICOM file in the folder
-4. Send this DICOM file to nordicMEDiVA
-5. Make sure you can see it in nordicMEDiVA and that you can load it in the viewer.
-6. Now, inspect the DICOM header of the DICOM file. What's the SeriesInstanceUID?
+1. In the DICOM folder related to this activity, there is a single DICOM file.
+2. Send this DICOM file to nordicMEDiVA
+3. Make sure you can see it in nordicMEDiVA and that you can load it in the viewer.
+4. Now, inspect the DICOM header of the DICOM file. What's the SeriesInstanceUID?
 
 On your local machine:
 1. Open a terminal and cd into the folder you created above
