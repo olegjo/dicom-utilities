@@ -1,4 +1,4 @@
-# Activity - modifying DICOM tags and seeing how they affect how the data is presented
+# Activity 5-3: modifying DICOM tags and seeing how they affect how the data is presented
 
 ## Exercise 1
 In this exercise, we will modify some DICOM tags and see how it affects how the data is displayed.

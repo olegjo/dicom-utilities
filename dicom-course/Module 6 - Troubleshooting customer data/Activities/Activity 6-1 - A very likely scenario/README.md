@@ -1,4 +1,4 @@
-# Activity - A very likely scenario
+# Activity 6-1: A very likely scenario
 
 ## Preamble
 When we speak with prospective customers, more often than not, the customer will ask for a trial. Often, they would also like to try the software using their own data. Our process for doing this is that the customer provides us with anonymized, or de-identified data, and we upload it to an AWS instance dedicated to trials.

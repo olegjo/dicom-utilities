@@ -1,4 +1,4 @@
-# Activity - Witness testimony of an account from January 21st 2026
+# Activity 6-2: Witness testimony of an account from January 21st 2026
 
 Dear reader,
 

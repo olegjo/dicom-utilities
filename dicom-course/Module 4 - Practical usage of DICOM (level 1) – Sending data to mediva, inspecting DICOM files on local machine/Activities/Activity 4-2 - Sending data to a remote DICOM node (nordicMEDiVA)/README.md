@@ -1,4 +1,4 @@
-# Activity - Sending data to remote DICOM node
+# Activity 4.2: Sending data to remote DICOM node
 
 In this activity, we will send some data to an instance of nordicMEDiVA. In doing so, we will try to find out some concepts about the DICOM header and how nordicMEDiVA interprets, and uses the tags to sort data.
 

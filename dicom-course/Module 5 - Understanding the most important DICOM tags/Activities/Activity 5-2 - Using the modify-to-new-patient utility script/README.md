@@ -1,4 +1,4 @@
-# Activity - using a utility script to modify all tags and create a "new" patient
+# Activity 5-2: Using a utility script to modify all tags and create a "new" patient
 
 In this activity, you'll use a utility script to change the DICOM tags in a DICOM study, such that the series will be interpreted as another patient.
 

@@ -1,4 +1,4 @@
-# Activities - Understanding the most important DICOM tags
+# Activity 5-1: Understanding the most important DICOM tags
 
 ## Exercise 1 - SeriesInstanceUID
 1. In the DICOM folder related to this activity, there is a single DICOM file.
