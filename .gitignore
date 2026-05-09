@@ -1,2 +1,6 @@
 # Ignore directories and files beginning with gitignore
 gitignore*
+*.DS_Store
+credentials.txt
+*.dcm
+__pycache__
