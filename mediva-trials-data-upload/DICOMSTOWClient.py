@@ -140,98 +140,28 @@ class DICOMSTOWClient:
             print(f"✗ Unexpected error uploading DICOM files from {folder_path}: {e}")
             return False
 
-def find_dicom_folders(root_path: str) -> List[str]:
-    """Find all folders containing .dcm files"""
-    dicom_folders = []
-    
-    for root, dirs, files in os.walk(root_path):
-        # Check if current folder contains .dcm files
-        dcm_files = [f for f in files if f.lower().endswith('.dcm')]
-        if dcm_files:
-            dicom_folders.append(root)
-    
-    return dicom_folders
-
-def get_dicom_files_in_folder(folder_path: str) -> List[str]:
-    """Get all .dcm files in a specific folder"""
-    dcm_pattern = os.path.join(folder_path, "*.dcm")
-    dcm_files = glob.glob(dcm_pattern, recursive=False)
-    
-    # Also check for uppercase extension
-    dcm_pattern_upper = os.path.join(folder_path, "*.DCM")
-    dcm_files.extend(glob.glob(dcm_pattern_upper, recursive=False))
-    
-    return dcm_files
-
-def main():
-    ## get root path from args 
-    if len(sys.argv) < 3:
-        print("Usage: python3 send.py <mediva_url> <path to DICOM root folder> <client secret>")
-        print("Example:")
-        print("\t> python3 send.py https://workshop.nordicmediva.com /home/user/dicom_data r42DJSKD8KSD8")
-        sys.exit(-1)
-
-    MEDIVA_URL = sys.argv[1]
-    ROOT_PATH = sys.argv[2]
-    CLIENT_SECRET = sys.argv[3]
-
-    print(f"Using MEDIVA_URL: {MEDIVA_URL}")
-    print(f"Using ROOT_PATH: {ROOT_PATH}")
-    # Configuration
-    CLIENT_ID = "dicom-gateway-client"
-    AUTH_URL = f"{MEDIVA_URL}/auth/realms/nordicmediva/protocol/openid-connect/token"
-    STOW_URL = f"{MEDIVA_URL}/api/dicom-gateway/v1/studies"
-
-    # Current working directory
-    
-    print(f"Starting DICOM folder walk in: {ROOT_PATH}")
-    print("=" * 60)
-    
-    # Initialize client
-    stow_client = DICOMSTOWClient(CLIENT_ID, CLIENT_SECRET, AUTH_URL, STOW_URL)
-    
-    if not stow_client.get_access_token():
-        print("✗ Cannot proceed without access token")
-        return
-    
-    # Find folders containing DICOM files
-    print(f"\nScanning for folders with DICOM files...")
-    dicom_folders = find_dicom_folders(ROOT_PATH)
-    
-    if not dicom_folders:
-        print("✗ No folders containing DICOM files found")
-        return
-    
-    print(f"✓ Found {len(dicom_folders)} folders containing DICOM files")
-    
-    # Process each folder
-    successful_uploads = 0
-    failed_uploads = 0
-    
-    for folder in dicom_folders:
-        print(f"\nProcessing folder: {folder}")
+    @staticmethod
+    def find_dicom_folders(root_path: str) -> List[str]:
+        """Find all folders containing .dcm files"""
+        dicom_folders = []
         
-        # Get DICOM files in this folder
-        dicom_files = get_dicom_files_in_folder(folder)
+        for root, dirs, files in os.walk(root_path):
+            # Check if current folder contains .dcm files
+            dcm_files = [f for f in files if f.lower().endswith('.dcm')]
+            if dcm_files:
+                dicom_folders.append(root)
         
-        if not dicom_files:
-            print(f"⚠ No DICOM files found in {folder}")
-            continue
-        
-        print(f"  Found {len(dicom_files)} DICOM files")
-        
-        # Perform STOW-RS
-        if stow_client.stow_dicom_files(dicom_files, folder):
-            successful_uploads += 1
-        else:
-            failed_uploads += 1
-    
-    # Summary
-    print("\n" + "=" * 60)
-    print("UPLOAD SUMMARY:")
-    print(f"✓ Successful uploads: {successful_uploads}")
-    print(f"✗ Failed uploads: {failed_uploads}")
-    print(f"📁 Total folders processed: {len(dicom_folders)}")
+        return dicom_folders
 
-if __name__ == "__main__":
-    main()
+    @staticmethod
+    def get_dicom_files_in_folder(folder_path: str) -> List[str]:
+        """Get all .dcm files in a specific folder"""
+        dcm_pattern = os.path.join(folder_path, "*.dcm")
+        dcm_files = glob.glob(dcm_pattern, recursive=False)
+        
+        # Also check for uppercase extension
+        dcm_pattern_upper = os.path.join(folder_path, "*.DCM")
+        dcm_files.extend(glob.glob(dcm_pattern_upper, recursive=False))
+        
+        return dcm_files
+

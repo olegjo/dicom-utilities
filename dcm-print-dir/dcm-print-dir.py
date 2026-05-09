@@ -13,7 +13,8 @@ def get_tag_value(ds: pydicom.Dataset, tag: str):
 
 def print_dicom_meta_in_dir(input_dir, output_format):
     # dicom_tags_to_get = ["SeriesInstanceUID"]
-    dicom_tags_to_get = ["PatientName", "PatientSex", "SeriesDescription", "SeriesDescription", "Manufacturer", "ImageType", "Rows", "Columns", "SpacingBetweenSlices", "SliceThickness", "PixelSpacing", "RepetitionTime", "EchoTime", "FlipAngle", "SOPClassUID", "NumberOfFrames", "MagneticFieldStrength", "Modality", "NUMBER_OF_FILES", "FILE_PATH"]
+    dicom_tags_to_get = ["Manufacturer", "SoftwareVersions", "SeriesDescription", "NUMBER_OF_FILES", "FILE_PATH"]
+    # dicom_tags_to_get = ["PatientName", "PatientSex", "SeriesDescription", "SeriesDescription", "Manufacturer", "ImageType", "Rows", "Columns", "SpacingBetweenSlices", "SliceThickness", "PixelSpacing", "RepetitionTime", "EchoTime", "FlipAngle", "SOPClassUID", "NumberOfFrames", "MagneticFieldStrength", "Modality", "NUMBER_OF_FILES", "FILE_PATH"]
 
     # All dicom files
     all_files = [filename for filename in glob.glob(f"{input_dir}/**/*", recursive=True) if os.path.isfile(filename) and pydicom.misc.is_dicom(filename)]
